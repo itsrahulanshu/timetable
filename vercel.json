@@ -1,15 +1,6 @@
 {
   "version": 2,
   "name": "lpu-timetable",
-  "builds": [
-    {
-      "src": "src/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
   ],
   "routes": [
     {
