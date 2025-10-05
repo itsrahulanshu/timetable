@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "lpu-timetable",
-  ],
   "routes": [
     {
       "src": "/sw.js",
