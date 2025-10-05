@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPU Timetable - Vercel Deployment Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .step h4 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .code-block .comment {
+            color: #5c6370;
+        }
+        
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        
+        .code-block .string {
+            color: #98c379;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 10px 0;
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .env-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .env-table th,
+        .env-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .env-table th {
+            background: #667eea;
+            color: white;
+        }
+        
+        .env-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .optional {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 LPU Timetable Deployment Guide</h1>
+            <p>Deploy your personal timetable app to Vercel in minutes!</p>
+        </header>
+        
+        <div class="content">
+            <!-- Introduction -->
+            <div class="section">
+                <h2>📖 Introduction</h2>
+                <p>
+                    This guide will walk you through deploying your LPU Timetable application to Vercel. 
+                    The setup is designed to be simple - you only need to update your LPU credentials in the 
+                    environment variables, and everything else will work automatically.
+                </p>
+                <div class="success">
+                    <strong>✅ One-Click Deployment Ready!</strong> This project is pre-configured for Vercel deployment.
+                </div>
+            </div>
+            
+            <!-- Prerequisites -->
+            <div class="section">
+                <h2>📋 Prerequisites</h2>
+                <div class="step">
+                    <h4>You'll need:</h4>
+                    <ul>
+                        <li><strong>LPU Account:</strong> Your registration number and password</li>
+                        <li><strong>Anti-Captcha API Key:</strong> From <a href="https://anti-captcha.com" target="_blank">anti-captcha.com</a> (minimum $5 credit recommended)</li>
+                        <li><strong>GitHub Account:</strong> Free account at <a href="https://github.com" target="_blank">github.com</a></li>
+                        <li><strong>Vercel Account:</strong> Free account at <a href="https://vercel.com" target="_blank">vercel.com</a></li>
+                        <li><strong>(Optional) OneSignal Account:</strong> For push notifications at <a href="https://onesignal.com" target="_blank">onesignal.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Environment Variables -->
+            <div class="section">
+                <h2>🔧 Step 1: Understanding Environment Variables</h2>
+                <p>
+                    Environment variables are configuration values that your app needs to function. 
+                    You'll need to set these up in Vercel.
+                </p>
+                
+                <h3>Required Environment Variables</h3>
+                <table class="env-table">
+                    <thead>
+                        <tr>
+                            <th>Variable Name</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                            <th>Required?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>LPU_USERNAME</code></td>
+                            <td>Your LPU registration number</td>
+                            <td>12345678</td>
+                            <td><span class="required">REQUIRED</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>LPU_PASSWORD</code></td>
+                            <td>Your LPU UMS password</td>
+                            <td>YourPassword@123</td>
+                            <td><span class="required">REQUIRED</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ANTICAPTCHA_API_KEY</code></td>
+                            <td>API key from anti-captcha.com</td>
+                            <td>a1b2c3d4e5f6...</td>
+                            <td><span class="required">REQUIRED</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Optional Environment Variables</h3>
+                <table class="env-table">
+                    <thead>
+                        <tr>
+                            <th>Variable Name</th>
+                            <th>Description</th>
+                            <th>Default Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>ONESIGNAL_APP_ID</code></td>
+                            <td>OneSignal app ID for push notifications</td>
+                            <td>Pre-configured (you can use your own)</td>
+                        </tr>
+                        <tr>
+                            <td><code>ONESIGNAL_API_KEY</code></td>
+                            <td>OneSignal API key for notifications</td>
+                            <td>Pre-configured (you can use your own)</td>
+                        </tr>
+                        <tr>
+                            <td><code>APP_URL</code></td>
+                            <td>Your Vercel deployment URL</td>
+                            <td>Will be set after deployment</td>
+                        </tr>
+                        <tr>
+                            <td><code>AUTO_REFRESH_ENABLED</code></td>
+                            <td>Enable automatic timetable refresh</td>
+                            <td>true</td>
+                        </tr>
+                        <tr>
+                            <td><code>AUTO_REFRESH_INTERVAL</code></td>
+                            <td>Refresh interval in minutes</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td><code>PWA_VERSION</code></td>
+                            <td>App version for cache busting</td>
+                            <td>1.9.4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info">
+                    <strong>💡 Tip:</strong> You can use the pre-configured OneSignal credentials initially, 
+                    or create your own free account at <a href="https://onesignal.com" target="_blank">OneSignal</a> 
+                    for custom push notifications.
+                </div>
+            </div>
+            
+            <!-- Getting API Keys -->
+            <div class="section">
+                <h2>🔑 Step 2: Getting Your API Keys</h2>
+                
+                <div class="step">
+                    <h4><span class="step-number">1</span>Get Anti-Captcha API Key</h4>
+                    <ol>
+                        <li>Visit <a href="https://anti-captcha.com/clients/entrance/login" target="_blank">anti-captcha.com</a></li>
+                        <li>Create a free account</li>
+                        <li>Add credits to your account (minimum $5 recommended, lasts for months)</li>
+                        <li>Go to <strong>Settings → API Setup</strong></li>
+                        <li>Copy your API key</li>
+                    </ol>
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> Anti-Captcha is a paid service but very affordable. 
+                        $5 credit typically lasts for several months of regular use.
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">2</span>(Optional) Setup OneSignal</h4>
+                    <ol>
+                        <li>Visit <a href="https://onesignal.com" target="_blank">onesignal.com</a> and create free account</li>
+                        <li>Create a new app and select <strong>Web Push</strong></li>
+                        <li>Choose <strong>Typical Setup</strong></li>
+                        <li>For site URL, use your Vercel URL (you'll get this after deployment)</li>
+                        <li>Copy your <strong>App ID</strong> and <strong>API Key</strong> from Settings</li>
+                    </ol>
+                    <div class="info">
+                        <strong>💡 Note:</strong> OneSignal is optional. The app works fine without it, 
+                        but you won't receive push notifications for timetable changes.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GitHub Setup -->
+            <div class="section">
+                <h2>📦 Step 3: Push Code to GitHub</h2>
+                
+                <div class="step">
+                    <h4><span class="step-number">1</span>Create GitHub Repository</h4>
+                    <ol>
+                        <li>Go to <a href="https://github.com/new" target="_blank">github.com/new</a></li>
+                        <li>Create a new repository (e.g., "lpu-timetable")</li>
+                        <li>Choose <strong>Public</strong> or <strong>Private</strong></li>
+                        <li>Don't initialize with README (we already have files)</li>
+                        <li>Click <strong>Create repository</strong></li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">2</span>Push Your Code</h4>
+                    <p>Open terminal in your project folder and run:</p>
+                    <div class="code-block">
+<span class="comment"># Initialize git repository</span>
+git init
+
+<span class="comment"># Add all files</span>
+git add .
+
+<span class="comment"># Commit files</span>
+git commit -m "Initial commit - LPU Timetable App"
+
+<span class="comment"># Add your GitHub repository (replace with your URL)</span>
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+
+<span class="comment"># Push to GitHub</span>
+git branch -M main
+git push -u origin main
+                    </div>
+                    <div class="warning">
+                        <strong>⚠️ Security Note:</strong> Make sure your <code>.env</code> file is NOT pushed to GitHub. 
+                        It's already in <code>.gitignore</code> to prevent this.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vercel Deployment -->
+            <div class="section">
+                <h2>🚀 Step 4: Deploy to Vercel</h2>
+                
+                <div class="step">
+                    <h4><span class="step-number">1</span>Connect Vercel to GitHub</h4>
+                    <ol>
+                        <li>Go to <a href="https://vercel.com" target="_blank">vercel.com</a></li>
+                        <li>Click <strong>Sign Up</strong> and choose <strong>Continue with GitHub</strong></li>
+                        <li>Authorize Vercel to access your GitHub account</li>
+                        <li>Click <strong>Add New Project</strong></li>
+                        <li>Select your <strong>lpu-timetable</strong> repository</li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">2</span>Configure Project Settings</h4>
+                    <p>Vercel will auto-detect the project settings. Just verify:</p>
+                    <ul>
+                        <li><strong>Framework Preset:</strong> Other (or None)</li>
+                        <li><strong>Build Command:</strong> (leave empty or use default)</li>
+                        <li><strong>Output Directory:</strong> (leave empty)</li>
+                        <li><strong>Install Command:</strong> npm install</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">3</span>Add Environment Variables</h4>
+                    <p>Before deploying, add your environment variables:</p>
+                    <ol>
+                        <li>In Vercel project setup, find <strong>Environment Variables</strong> section</li>
+                        <li>Add each variable one by one:</li>
+                    </ol>
+                    <div class="code-block">
+<span class="comment"># Required Variables</span>
+LPU_USERNAME=<span class="string">your_registration_number</span>
+LPU_PASSWORD=<span class="string">your_password</span>
+ANTICAPTCHA_API_KEY=<span class="string">your_api_key</span>
+
+<span class="comment"># Optional Variables (recommended)</span>
+AUTO_REFRESH_ENABLED=<span class="string">true</span>
+AUTO_REFRESH_INTERVAL=<span class="string">30</span>
+PWA_VERSION=<span class="string">1.9.4</span>
+
+<span class="comment"># If you have your own OneSignal account</span>
+ONESIGNAL_APP_ID=<span class="string">your_onesignal_app_id</span>
+ONESIGNAL_API_KEY=<span class="string">your_onesignal_api_key</span>
+                    </div>
+                    <div class="info">
+                        <strong>💡 Tip:</strong> For each variable, select <strong>"All"</strong> under environments 
+                        (Production, Preview, Development) to ensure it works everywhere.
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">4</span>Deploy!</h4>
+                    <ol>
+                        <li>Click <strong>Deploy</strong> button</li>
+                        <li>Wait 1-2 minutes while Vercel builds and deploys your app</li>
+                        <li>You'll get a URL like: <code>https://your-app.vercel.app</code></li>
+                        <li>Click the URL to open your timetable app!</li>
+                    </ol>
+                    <div class="success">
+                        <strong>🎉 Congratulations!</strong> Your app is now live on the internet!
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">5</span>Update APP_URL (Optional)</h4>
+                    <p>After deployment, update the APP_URL for better notifications:</p>
+                    <ol>
+                        <li>Go to your Vercel project → <strong>Settings</strong> → <strong>Environment Variables</strong></li>
+                        <li>Add new variable: <code>APP_URL</code></li>
+                        <li>Value: <code>https://your-app.vercel.app</code> (your actual URL)</li>
+                        <li>Click <strong>Save</strong></li>
+                        <li>Go to <strong>Deployments</strong> tab and click <strong>Redeploy</strong></li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Using the App -->
+            <div class="section">
+                <h2>📱 Step 5: Using Your Timetable App</h2>
+                
+                <div class="step">
+                    <h4><span class="step-number">1</span>Access Your App</h4>
+                    <ul>
+                        <li>Open your Vercel URL in any browser</li>
+                        <li>The app will automatically fetch your timetable using your LPU credentials</li>
+                        <li>Your timetable will be displayed in a clean, organized view</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">2</span>Install as PWA (Progressive Web App)</h4>
+                    <p><strong>On Mobile (Android/iOS):</strong></p>
+                    <ol>
+                        <li>Open the app URL in Chrome/Safari</li>
+                        <li>Tap the menu (⋮) and select <strong>"Add to Home Screen"</strong></li>
+                        <li>The app will install like a native app</li>
+                        <li>Open from your home screen - works offline too!</li>
+                    </ol>
+                    <p><strong>On Desktop (Chrome/Edge):</strong></p>
+                    <ol>
+                        <li>Look for the install icon (➕) in the address bar</li>
+                        <li>Click it and select <strong>"Install"</strong></li>
+                        <li>The app will open in its own window</li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">3</span>Enable Push Notifications</h4>
+                    <ol>
+                        <li>When prompted, allow notifications</li>
+                        <li>You'll receive updates when your timetable changes</li>
+                        <li>Notifications work even when the app is closed</li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h4><span class="step-number">4</span>Features Available</h4>
+                    <ul>
+                        <li>✅ View your complete weekly timetable</li>
+                        <li>✅ Filter classes by day</li>
+                        <li>✅ See today's classes highlighted</li>
+                        <li>✅ Dark mode support</li>
+                        <li>✅ Offline access (PWA)</li>
+                        <li>✅ Auto-refresh timetable every 30 minutes</li>
+                        <li>✅ Push notifications for schedule changes</li>
+                        <li>✅ Manual refresh button</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Troubleshooting -->
+            <div class="section">
+                <h2>🔍 Troubleshooting</h2>
+                
+                <div class="step">
+                    <h4>❌ Deployment Failed</h4>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Check if all required environment variables are set</li>
+                        <li>Make sure there are no typos in variable names</li>
+                        <li>Check Vercel deployment logs for specific errors</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h4>❌ Timetable Not Loading</h4>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Verify your LPU_USERNAME and LPU_PASSWORD are correct</li>
+                        <li>Check if Anti-Captcha API key is valid and has balance</li>
+                        <li>Check browser console for errors (F12 → Console)</li>
+                        <li>Try the manual refresh button</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h4>❌ Notifications Not Working</h4>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Make sure you allowed notifications in your browser</li>
+                        <li>Check if ONESIGNAL_APP_ID and ONESIGNAL_API_KEY are set</li>
+                        <li>Update APP_URL to your actual Vercel URL</li>
+                        <li>Test notifications using the API endpoint: <code>/api/test-notification</code></li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h4>❌ App Shows Old Data</h4>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Click the refresh button (🔄) in the app</li>
+                        <li>Clear browser cache and reload</li>
+                        <li>Check if AUTO_REFRESH_ENABLED is set to true</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Updating -->
+            <div class="section">
+                <h2>🔄 Updating Your Deployment</h2>
+                
+                <div class="step">
+                    <h4>Change Environment Variables</h4>
+                    <ol>
+                        <li>Go to Vercel Dashboard → Your Project</li>
+                        <li>Click <strong>Settings</strong> → <strong>Environment Variables</strong></li>
+                        <li>Update any variable you want to change</li>
+                        <li>Go to <strong>Deployments</strong> → <strong>Redeploy</strong></li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h4>Update Code (Future Updates)</h4>
+                    <p>If you make changes to the code:</p>
+                    <div class="code-block">
+<span class="comment"># Stage your changes</span>
+git add .
+
+<span class="comment"># Commit changes</span>
+git commit -m "Updated timetable app"
+
+<span class="comment"># Push to GitHub</span>
+git push origin main
+                    </div>
+                    <p>Vercel will automatically deploy the updates!</p>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="section">
+                <h2>💡 Pro Tips</h2>
+                
+                <div class="success">
+                    <h4>✅ Best Practices</h4>
+                    <ul>
+                        <li>Install the app as PWA for best experience</li>
+                        <li>Enable notifications to stay updated on schedule changes</li>
+                        <li>Use dark mode to save battery on mobile devices</li>
+                        <li>Bookmark the Vercel deployment URL for easy access</li>
+                        <li>Keep your Anti-Captcha account topped up (check balance monthly)</li>
+                    </ul>
+                </div>
+                
+                <div class="info">
+                    <h4>🔒 Security Tips</h4>
+                    <ul>
+                        <li>Never commit your <code>.env</code> file to GitHub</li>
+                        <li>Don't share your API keys publicly</li>
+                        <li>Use strong passwords for your LPU account</li>
+                        <li>Regularly check Vercel deployment logs</li>
+                    </ul>
+                </div>
+                
+                <div class="warning">
+                    <h4>💰 Cost Information</h4>
+                    <ul>
+                        <li><strong>Vercel:</strong> FREE (Hobby plan supports personal projects)</li>
+                        <li><strong>GitHub:</strong> FREE (public repositories are free)</li>
+                        <li><strong>Anti-Captcha:</strong> ~$5 for several months of use</li>
+                        <li><strong>OneSignal:</strong> FREE (up to 10,000 notifications/month)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- FAQs -->
+            <div class="section">
+                <h2>❓ Frequently Asked Questions</h2>
+                
+                <div class="step">
+                    <h4>Q: Can multiple users use the same deployment?</h4>
+                    <p>A: No, this deployment is configured for a single user (your LPU account). 
+                    Each user needs their own deployment with their own credentials.</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Q: Will my password be visible to others?</h4>
+                    <p>A: No! Environment variables in Vercel are encrypted and not visible in the code. 
+                    They're stored securely on Vercel's servers.</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Q: How often does the timetable refresh?</h4>
+                    <p>A: By default, every 30 minutes. You can change this by updating the 
+                    <code>AUTO_REFRESH_INTERVAL</code> environment variable.</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Q: What happens if Anti-Captcha runs out of credits?</h4>
+                    <p>A: The login will fail and timetable won't update. You'll need to add more credits 
+                    to your Anti-Captcha account.</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Q: Can I use a custom domain?</h4>
+                    <p>A: Yes! Vercel supports custom domains. Go to Project Settings → Domains to add one.</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Q: Is my data stored anywhere?</h4>
+                    <p>A: The app uses Vercel's serverless functions. Your timetable data is temporarily cached 
+                    for better performance but not permanently stored anywhere except Vercel's ephemeral storage.</p>
+                </div>
+            </div>
+            
+            <!-- Support -->
+            <div class="section">
+                <h2>🆘 Need Help?</h2>
+                <p>If you run into any issues:</p>
+                <ul>
+                    <li>Check the <strong>Troubleshooting</strong> section above</li>
+                    <li>Review Vercel deployment logs for errors</li>
+                    <li>Check browser console (F12) for JavaScript errors</li>
+                    <li>Verify all environment variables are set correctly</li>
+                    <li>Make sure your Anti-Captcha account has sufficient balance</li>
+                </ul>
+                
+                <div class="info">
+                    <strong>📧 Quick Checklist Before Asking for Help:</strong>
+                    <ol>
+                        <li>✅ All required environment variables are set</li>
+                        <li>✅ LPU credentials are correct</li>
+                        <li>✅ Anti-Captcha API key is valid and has balance</li>
+                        <li>✅ No typos in environment variable names</li>
+                        <li>✅ Deployment completed successfully on Vercel</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Final -->
+            <div class="section">
+                <div class="success" style="text-align: center; padding: 30px;">
+                    <h2 style="margin-bottom: 20px; border: none; color: #28a745;">🎉 You're All Set!</h2>
+                    <p style="font-size: 1.2em; margin-bottom: 20px;">
+                        Your LPU Timetable app is now deployed and ready to use!
+                    </p>
+                    <a href="#" class="btn">🚀 Deploy to Vercel</a>
+                    <a href="https://github.com" target="_blank" class="btn">📦 GitHub</a>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Made with ❤️ for LPU Students | Deployed on Vercel ⚡</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                Version 1.9.4 | Last Updated: October 2025
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

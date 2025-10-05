@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  lpu-timetable:
+    build: .
+    container_name: lpu-timetable
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - AUTO_REFRESH_ENABLED=true
+      - AUTO_REFRESH_INTERVAL=30
+      - PWA_VERSION=1.2.0
+      # Add your environment variables here
+      # - UMS_USERNAME=your_username
+      # - UMS_PASSWORD=your_password
+      # - ONESIGNAL_APP_ID=your_app_id
+      # - ONESIGNAL_API_KEY=your_api_key
+    volumes:
+      # Persist data directory for cache and session data
+      - ./src/data:/app/src/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - lpu-network
+
+networks:
+  lpu-network:
+    driver: bridge

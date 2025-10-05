@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPU Timetable - Complete Analysis & Tech Stack</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .nav {
+            background: #4c1d95;
+            padding: 15px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .section {
+            padding: 40px;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section h2 {
+            color: #4c1d95;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            color: #5b21b6;
+            font-size: 1.3rem;
+            margin: 25px 0 15px 0;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .tech-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #6366f1;
+        }
+        
+        .tech-card h4 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .tech-list {
+            list-style: none;
+        }
+        
+        .tech-list li {
+            padding: 5px 0;
+            color: #475569;
+        }
+        
+        .tech-list li:before {
+            content: "🔧 ";
+            margin-right: 8px;
+        }
+        
+        .architecture-diagram {
+            background: #f1f5f9;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #6366f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            min-width: 150px;
+        }
+        
+        .arrow {
+            font-size: 2rem;
+            color: #6366f1;
+            margin: 0 10px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background: #ecfdf5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+        
+        .feature-item h4 {
+            color: #065f46;
+            margin-bottom: 8px;
+        }
+        
+        .feature-item p {
+            color: #047857;
+            font-size: 0.9rem;
+        }
+        
+        .deployment-steps {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .deployment-steps h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .step h5 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            background: #fbbf24;
+            color: #92400e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .data-flow {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .storage-info {
+            background: #f3e8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 LPU Timetable Application</h1>
+            <p>Complete Analysis, Tech Stack & Deployment Guide</p>
+        </div>
+        
+        <div class="content">
+            <nav class="nav">
+                <div class="nav-links">
+                    <a href="#overview" class="nav-link" onclick="showSection('overview')">📋 Overview</a>
+                    <a href="#tech-stack" class="nav-link" onclick="showSection('tech-stack')">⚙️ Tech Stack</a>
+                    <a href="#architecture" class="nav-link" onclick="showSection('architecture')">🏗️ Architecture</a>
+                    <a href="#data-flow" class="nav-link" onclick="showSection('data-flow')">📊 Data Flow</a>
+                    <a href="#features" class="nav-link" onclick="showSection('features')">✨ Features</a>
+                    <a href="#deployment" class="nav-link" onclick="showSection('deployment')">🚀 Deployment</a>
+                </div>
+            </nav>
+            
+            <!-- Overview Section -->
+            <div id="overview" class="section active">
+                <h2>📋 Project Overview</h2>
+                
+                <h3>🎯 Purpose</h3>
+                <p>LPU Timetable is a comprehensive Progressive Web Application (PWA) designed for <span class="highlight">Lovely Professional University (LPU)</span> students to view their class schedules with a modern, responsive interface.</p>
+                
+                <h3>📊 Key Statistics</h3>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <h4>📁 Project Structure</h4>
+                        <ul class="tech-list">
+                            <li>Total Files: 20+</li>
+                            <li>Lines of Code: ~2000+</li>
+                            <li>Main Language: JavaScript (Node.js)</li>
+                            <li>Frontend: Vanilla JS + CSS3</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>🔧 Core Modules</h4>
+                        <ul class="tech-list">
+                            <li>Authentication Manager</li>
+                            <li>Timetable Manager</li>
+                            <li>Cache Manager</li>
+                            <li>Notification Manager</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>🌟 Application Type</h3>
+                <p>यह एक <span class="highlight">Full-Stack Progressive Web Application (PWA)</span> है जो:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>✅ Offline support प्रदान करता है</li>
+                    <li>✅ Real-time data fetching करता है</li>
+                    <li>✅ Push notifications support करता है</li>
+                    <li>✅ Mobile-first responsive design है</li>
+                    <li>✅ Auto-refresh और caching features हैं</li>
+                </ul>
+            </div>
+            
+            <!-- Tech Stack Section -->
+            <div id="tech-stack" class="section">
+                <h2>⚙️ Complete Technology Stack</h2>
+                
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <h4>🖥️ Backend Technologies</h4>
+                        <ul class="tech-list">
+                            <li><strong>Node.js</strong> - Runtime Environment</li>
+                            <li><strong>Express.js</strong> - Web Framework</li>
+                            <li><strong>Axios</strong> - HTTP Client</li>
+                            <li><strong>Cheerio</strong> - HTML Parsing</li>
+                            <li><strong>CORS</strong> - Cross-Origin Resource Sharing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>🎨 Frontend Technologies</h4>
+                        <ul class="tech-list">
+                            <li><strong>Vanilla JavaScript</strong> - Core Logic</li>
+                            <li><strong>CSS3</strong> - Styling & Animations</li>
+                            <li><strong>HTML5</strong> - Structure</li>
+                            <li><strong>Service Worker</strong> - PWA Features</li>
+                            <li><strong>Web Manifest</strong> - App Configuration</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>🔐 Authentication & Security</h4>
+                        <ul class="tech-list">
+                            <li><strong>Anti-Captcha API</strong> - CAPTCHA Solving</li>
+                            <li><strong>Cookie Management</strong> - Session Handling</li>
+                            <li><strong>HTTPS Agent</strong> - Secure Connections</li>
+                            <li><strong>SHA1 Hashing</strong> - CAPTCHA Conversion</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>💾 Data Storage & Cache</h4>
+                        <ul class="tech-list">
+                            <li><strong>JSON Files</strong> - Local Data Storage</li>
+                            <li><strong>File System (fs)</strong> - File Operations</li>
+                            <li><strong>Memory Cache</strong> - Runtime Storage</li>
+                            <li><strong>Session Persistence</strong> - Login State</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>📱 PWA & Notifications</h4>
+                        <ul class="tech-list">
+                            <li><strong>OneSignal</strong> - Push Notifications</li>
+                            <li><strong>Service Worker</strong> - Offline Support</li>
+                            <li><strong>Web App Manifest</strong> - Install Prompt</li>
+                            <li><strong>Background Sync</strong> - Auto Updates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>🛠️ Development Tools</h4>
+                        <ul class="tech-list">
+                            <li><strong>Docker</strong> - Containerization</li>
+                            <li><strong>Docker Compose</strong> - Multi-container Setup</li>
+                            <li><strong>Environment Variables</strong> - Configuration</li>
+                            <li><strong>NPM</strong> - Package Management</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>📦 Dependencies (package.json)</h3>
+                <div class="code-block">
+{
+  "dependencies": {
+    "@antiadmin/anticaptchaofficial": "^1.0.53",
+    "axios": "^1.6.0",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^4.18.2"
+  }
+}
+                </div>
+            </div>
+            
+            <!-- Architecture Section -->
+            <div id="architecture" class="section">
+                <h2>🏗️ System Architecture</h2>
+                
+                <h3>📐 Architecture Pattern</h3>
+                <p>यह application <span class="highlight">Modular MVC-like Architecture</span> को follow करता है:</p>
+                
+                <div class="architecture-diagram">
+                    <div class="flow-box">📱 Frontend<br>(PWA)</div>
+                    <span class="arrow">⬇️</span>
+                    <div class="flow-box">🌐 Express Server<br>(API Layer)</div>
+                    <span class="arrow">⬇️</span>
+                    <div class="flow-box">🔧 Business Logic<br>(Modules)</div>
+                    <span class="arrow">⬇️</span>
+                    <div class="flow-box">🔐 LPU UMS<br>(External API)</div>
+                </div>
+                
+                <h3>📁 File Structure Analysis</h3>
+                <div class="code-block">
+📦 LPU Timetable Application
+├── 📂 src/                          # Backend Source Code
+│   ├── 📂 modules/                  # Core Business Logic
+│   │   ├── 🔐 auth.js              # Authentication Manager
+│   │   ├── 📅 timetable.js         # Timetable Data Manager  
+│   │   ├── 💾 cache.js             # Cache & Storage Manager
+│   │   └── 📱 notifications.js     # Push Notification Manager
+│   ├── 📂 data/                    # Data Storage
+│   │   ├── 🍪 session_cookies.json # User Session Data
+│   │   ├── 📊 timetable_cache.json # Cached Timetable Data
+│   │   └── 📋 previous_timetable.json # Change Detection Data
+│   ├── 🚀 server.js               # Main Express Server
+│   └── 🔑 login.js                # Automated Login System
+├── 📂 public/                     # Frontend Assets
+│   ├── 📂 assets/
+│   │   ├── 🎨 css/main.css       # Styles & Animations
+│   │   ├── ⚙️ js/app.js          # Frontend Logic
+│   │   └── 🖼️ icons/             # PWA Icons
+│   ├── 📄 index.html              # Main HTML Page
+│   ├── 📱 manifest.json           # PWA Configuration
+│   └── 🔧 sw.js                   # Service Worker
+├── 🐳 docker-compose.yml          # Container Configuration
+├── 🐳 Dockerfile                  # Container Image
+└── 📦 package.json                # Dependencies & Scripts
+                </div>
+                
+                <h3>🔄 Module Interaction Flow</h3>
+                <div class="data-flow">
+                    <h4>1. Authentication Flow:</h4>
+                    <p><strong>AuthManager</strong> → <strong>LoginJS</strong> → <strong>LPU UMS</strong> → <strong>Session Storage</strong></p>
+                    
+                    <h4>2. Data Fetching Flow:</h4>
+                    <p><strong>TimetableManager</strong> → <strong>AuthManager</strong> → <strong>LPU API</strong> → <strong>CacheManager</strong></p>
+                    
+                    <h4>3. Notification Flow:</h4>
+                    <p><strong>CacheManager</strong> → <strong>Change Detection</strong> → <strong>NotificationManager</strong> → <strong>OneSignal</strong></p>
+                </div>
+            </div>
+            
+            <!-- Data Flow Section -->
+            <div id="data-flow" class="section">
+                <h2>📊 Data Flow Diagram (DFD)</h2>
+                
+                <h3>🔄 Level 0 DFD (Context Diagram)</h3>
+                <div class="architecture-diagram">
+                    <div class="flow-box">👤 LPU Student</div>
+                    <span class="arrow">⬇️</span>
+                    <div class="flow-box" style="background: #6366f1; color: white;">🎓 LPU Timetable<br>System</div>
+                    <span class="arrow">⬇️</span>
+                    <div class="flow-box">🏫 LPU UMS<br>Server</div>
+                </div>
+                
+                <h3>📈 Level 1 DFD (Main Processes)</h3>
+                <div class="data-flow">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="flow-box">
+                            <strong>🔐 P1: Authentication</strong><br>
+                            • Login with credentials<br>
+                            • CAPTCHA solving<br>
+                            • Session management
+                        </div>
+                        <div class="flow-box">
+                            <strong>📅 P2: Data Fetching</strong><br>
+                            • Timetable retrieval<br>
+                            • HTML parsing<br>
+                            • Data processing
+                        </div>
+                        <div class="flow-box">
+                            <strong>💾 P3: Cache Management</strong><br>
+                            • Data storage<br>
+                            • Change detection<br>
+                            • Auto refresh
+                        </div>
+                        <div class="flow-box">
+                            <strong>📱 P4: User Interface</strong><br>
+                            • Data display<br>
+                            • Filtering<br>
+                            • PWA features
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>💾 Data Storage Strategy</h3>
+                <div class="storage-info">
+                    <div class="tech-grid">
+                        <div class="tech-card">
+                            <h4>🍪 Session Data</h4>
+                            <p><strong>File:</strong> session_cookies.json</p>
+                            <p><strong>Contains:</strong> Login cookies, username, timestamp</p>
+                            <p><strong>Purpose:</strong> Maintain login state</p>
+                        </div>
+                        <div class="tech-card">
+                            <h4>📊 Timetable Cache</h4>
+                            <p><strong>File:</strong> timetable_cache.json</p>
+                            <p><strong>Contains:</strong> Current schedule data</p>
+                            <p><strong>Purpose:</strong> Fast data retrieval</p>
+                        </div>
+                        <div class="tech-card">
+                            <h4>📋 Previous Data</h4>
+                            <p><strong>File:</strong> previous_timetable.json</p>
+                            <p><strong>Contains:</strong> Last known schedule</p>
+                            <p><strong>Purpose:</strong> Change detection</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>🔄 Auto-Refresh Process</h3>
+                <div class="code-block">
+📍 Auto-Refresh Flow:
+1. ⏰ Timer triggers (every 1 minute)
+2. 📅 Fetch fresh data from LPU UMS
+3. 🔍 Compare with previous data
+4. 📊 Detect changes (added/removed/modified classes)
+5. 📱 Send push notifications if changes found
+6. 💾 Update cache with new data
+7. 🔄 Update frontend display
+                </div>
+            </div>
+            
+            <!-- Features Section -->
+            <div id="features" class="section">
+                <h2>✨ Application Features</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h4>🔐 Automated Login</h4>
+                        <p>Anti-CAPTCHA integration के साथ automatic LPU UMS login</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📱 Progressive Web App</h4>
+                        <p>Installable PWA with offline support और service worker</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔄 Real-time Updates</h4>
+                        <p>Automatic data refresh और schedule change detection</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📊 Smart Caching</h4>
+                        <p>Intelligent data caching for fast loading और offline access</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📱 Push Notifications</h4>
+                        <p>OneSignal integration के साथ schedule change alerts</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎨 Modern UI/UX</h4>
+                        <p>Responsive design with dark mode और animations</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📅 Day Filtering</h4>
+                        <p>Day-wise class filtering और current class highlighting</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🐳 Docker Support</h4>
+                        <p>Complete containerization के साथ easy deployment</p>
+                    </div>
+                </div>
+                
+                <h3>🎯 Core Functionalities</h3>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <h4>Authentication System</h4>
+                        <ul class="tech-list">
+                            <li>Automated CAPTCHA solving</li>
+                            <li>Session cookie management</li>
+                            <li>Auto re-authentication</li>
+                            <li>Security validation</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Data Management</h4>
+                        <ul class="tech-list">
+                            <li>HTML parsing from UMS</li>
+                            <li>JSON data processing</li>
+                            <li>Change detection algorithm</li>
+                            <li>Cache optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Deployment Section -->
+            <div id="deployment" class="section">
+                <h2>🚀 Vercel Deployment Guide</h2>
+                
+                <div class="deployment-steps">
+                    <h4>📋 Pre-deployment Checklist</h4>
+                    
+                    <div class="step">
+                        <h5>1. Environment Variables Setup</h5>
+                        <p>Create a <code>.env</code> file with required credentials:</p>
+                        <div class="code-block">
+# LPU Credentials
+LPU_USERNAME=your_registration_number
+LPU_PASSWORD=your_password
+
+# Anti-Captcha API
+ANTICAPTCHA_API_KEY=your_api_key
+
+# OneSignal (Optional)
+ONESIGNAL_APP_ID=your_app_id
+ONESIGNAL_API_KEY=your_api_key
+
+# Server Configuration
+PORT=3000
+AUTO_REFRESH_ENABLED=true
+AUTO_REFRESH_INTERVAL=30
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <h5>2. Create vercel.json Configuration</h5>
+                        <div class="code-block">
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <h5>3. Update package.json for Vercel</h5>
+                        <div class="code-block">
+{
+  "scripts": {
+    "start": "node src/server.js",
+    "build": "echo 'Build complete'",
+    "vercel-build": "echo 'Vercel build complete'"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>📦 Step-by-Step Deployment</h3>
+                
+                <div class="step">
+                    <h5>🔗 Step 1: GitHub Repository</h5>
+                    <div class="code-block">
+# Initialize Git repository
+git init
+git add .
+git commit -m "Initial commit: LPU Timetable App"
+
+# Push to GitHub
+git remote add origin https://github.com/yourusername/lpu-timetable.git
+git push -u origin main
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h5>🔧 Step 2: Vercel Account Setup</h5>
+                    <p>1. Visit <a href="https://vercel.com" target="_blank">vercel.com</a></p>
+                    <p>2. Sign up with GitHub account</p>
+                    <p>3. Connect your GitHub repository</p>
+                    <p>4. Import the LPU Timetable project</p>
+                </div>
+                
+                <div class="step">
+                    <h5>⚙️ Step 3: Environment Variables</h5>
+                    <p>In Vercel dashboard, go to Settings → Environment Variables:</p>
+                    <div class="code-block">
+LPU_USERNAME = your_registration_number
+LPU_PASSWORD = your_password  
+ANTICAPTCHA_API_KEY = your_api_key
+ONESIGNAL_APP_ID = your_app_id
+ONESIGNAL_API_KEY = your_api_key
+AUTO_REFRESH_ENABLED = true
+AUTO_REFRESH_INTERVAL = 30
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h5>🚀 Step 4: Deploy</h5>
+                    <p>Click "Deploy" button in Vercel dashboard या use Vercel CLI:</p>
+                    <div class="code-block">
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to Vercel
+vercel
+
+# Production deployment
+vercel --prod
+                    </div>
+                </div>
+                
+                <h3>⚠️ Important Notes for Vercel Deployment</h3>
+                <div class="storage-info">
+                    <div class="tech-card">
+                        <h4>🚫 File System Limitations</h4>
+                        <p>Vercel serverless functions have read-only file system. Cache data को database में store करना होगा।</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>💾 Database Alternatives</h4>
+                        <ul class="tech-list">
+                            <li>Vercel KV (Redis)</li>
+                            <li>MongoDB Atlas</li>
+                            <li>Supabase</li>
+                            <li>PlanetScale</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>🔄 Auto-refresh Limitations</h4>
+                        <p>Serverless functions में persistent timers नहीं चल सकते। Vercel Cron Jobs या external service use करें।</p>
+                    </div>
+                </div>
+                
+                <h3>🛠️ Code Modifications for Vercel</h3>
+                <div class="code-block">
+// Replace file-based cache with database
+// Example: Using Vercel KV
+import { kv } from '@vercel/kv'
+
+// Save timetable data
+await kv.set('timetable_cache', timetableData)
+
+// Load timetable data  
+const cachedData = await kv.get('timetable_cache')
+
+// For auto-refresh, use Vercel Cron Jobs
+// Create: /api/cron.js
+export default async function handler(req, res) {
+  // Auto-refresh logic here
+  res.status(200).json({ success: true })
+}
+                </div>
+                
+                <h3>🎯 Production URL</h3>
+                <p>After successful deployment, your app will be available at:</p>
+                <div class="code-block">
+https://your-project-name.vercel.app
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.style.background = 'rgba(255,255,255,0.1)';
+            });
+            
+            event.target.style.background = 'rgba(255,255,255,0.3)';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show overview section by default
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>
